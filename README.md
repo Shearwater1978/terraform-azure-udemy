@@ -1,0 +1,1 @@
+This repo was created for studied course on Udemy https://www.udemy.com/course/terraform-for-azure/
