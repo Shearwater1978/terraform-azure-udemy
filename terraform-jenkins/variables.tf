@@ -15,11 +15,11 @@ variable "key_vault_rg" {
 }
 
 variable "key_vault_username_field_name" {
-  type = string
+  type    = string
   default = "jenkins-username"
 }
 
 variable "key_vault_password_field_name" {
-  type = string
+  type    = string
   default = "jenkins-password"
 }

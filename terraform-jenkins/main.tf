@@ -128,17 +128,17 @@ resource "azurerm_linux_virtual_machine" "self-vm" {
 }
 
 data "azurerm_key_vault" "jenkins" {
-  name                = "${var.key_vault_name}"
-  resource_group_name = "${var.key_vault_rg}"
+  name                = var.key_vault_name
+  resource_group_name = var.key_vault_rg
 }
 
 data "azurerm_key_vault_secret" "jenkins-username" {
-  name         = "${var.key_vault_username_field_name}"
+  name         = var.key_vault_username_field_name
   key_vault_id = data.azurerm_key_vault.jenkins.id
 }
 
 data "azurerm_key_vault_secret" "jenkins-password" {
-  name         = "${var.key_vault_password_field_name}"
+  name         = var.key_vault_password_field_name
   key_vault_id = data.azurerm_key_vault.jenkins.id
 }
 
@@ -148,7 +148,7 @@ data "azurerm_public_ip" "self-ip-data" {
 }
 
 data "template_file" "init" {
-  template = "${file("customdata.tpl.j2")}"
+  template = file("customdata.tpl.j2")
   vars = {
     username = "${data.azurerm_key_vault_secret.jenkins-username.value}",
     password = "${data.azurerm_key_vault_secret.jenkins-password.value}"
@@ -160,11 +160,11 @@ output "public_ip_address" {
 }
 
 output "jenkins_username" {
-  value = "${data.azurerm_key_vault_secret.jenkins-username.value}"
+  value     = data.azurerm_key_vault_secret.jenkins-username.value
   sensitive = true
 }
 
 output "jenkins_password" {
-  value = "${data.azurerm_key_vault_secret.jenkins-password.value}"
+  value     = data.azurerm_key_vault_secret.jenkins-password.value
   sensitive = true
 }
