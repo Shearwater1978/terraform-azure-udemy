@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=2.91.0"
+      version = "=3.27.0"
     }
   }
 }
@@ -103,7 +103,7 @@ resource "azurerm_linux_virtual_machine" "self-vm" {
     azurerm_network_interface.self-nic.id,
   ]
 
-  custom_data = filebase64("customdata.tpl")
+  custom_data = base64encode("${data.template_file.init.rendered}")
 
   admin_ssh_key {
     username   = "adminuser"
@@ -145,6 +145,14 @@ data "azurerm_key_vault_secret" "jenkins-password" {
 data "azurerm_public_ip" "self-ip-data" {
   name                = azurerm_public_ip.self-ip.name
   resource_group_name = azurerm_resource_group.self-rg.name
+}
+
+data "template_file" "init" {
+  template = "${file("customdata.tpl.j2")}"
+  vars = {
+    username = "${data.azurerm_key_vault_secret.jenkins-username.value}",
+    password = "${data.azurerm_key_vault_secret.jenkins-password.value}"
+  }
 }
 
 output "public_ip_address" {
