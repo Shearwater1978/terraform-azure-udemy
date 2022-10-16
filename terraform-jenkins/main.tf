@@ -133,12 +133,12 @@ data "azurerm_key_vault" "jenkins" {
 }
 
 data "azurerm_key_vault_secret" "jenkins-username" {
-  name         = "jenkins-username"
+  name         = "${var.key_vault_username_field_name}"
   key_vault_id = data.azurerm_key_vault.jenkins.id
 }
 
 data "azurerm_key_vault_secret" "jenkins-password" {
-  name         = "jenkins-password"
+  name         = "${var.key_vault_password_field_name}"
   key_vault_id = data.azurerm_key_vault.jenkins.id
 }
 
@@ -149,4 +149,14 @@ data "azurerm_public_ip" "self-ip-data" {
 
 output "public_ip_address" {
   value = "${azurerm_linux_virtual_machine.self-vm.name}: ${data.azurerm_public_ip.self-ip-data.ip_address}"
+}
+
+output "jenkins_username" {
+  value = "${data.azurerm_key_vault_secret.jenkins-username.value}"
+  sensitive = true
+}
+
+output "jenkins_password" {
+  value = "${data.azurerm_key_vault_secret.jenkins-password.value}"
+  sensitive = true
 }
