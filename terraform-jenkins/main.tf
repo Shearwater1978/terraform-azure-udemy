@@ -127,6 +127,21 @@ resource "azurerm_linux_virtual_machine" "self-vm" {
   }
 }
 
+data "azurerm_key_vault" "jenkins" {
+  name                = "${var.key_vault_name}"
+  resource_group_name = "${var.key_vault_rg}"
+}
+
+data "azurerm_key_vault_secret" "jenkins-username" {
+  name         = "jenkins-username"
+  key_vault_id = data.azurerm_key_vault.jenkins.id
+}
+
+data "azurerm_key_vault_secret" "jenkins-password" {
+  name         = "jenkins-password"
+  key_vault_id = data.azurerm_key_vault.jenkins.id
+}
+
 data "azurerm_public_ip" "self-ip-data" {
   name                = azurerm_public_ip.self-ip.name
   resource_group_name = azurerm_resource_group.self-rg.name

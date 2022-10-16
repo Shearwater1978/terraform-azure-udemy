@@ -5,3 +5,11 @@ variable "host_os" {
 variable "env_name" {
   type = string
 }
+
+variable "key_vault_name" {
+  type = string
+}
+
+variable "key_vault_rg" {
+  type = string
+}
