@@ -158,13 +158,3 @@ data "template_file" "init" {
 output "public_ip_address" {
   value = "${azurerm_linux_virtual_machine.self-vm.name}: ${data.azurerm_public_ip.self-ip-data.ip_address}"
 }
-
-output "jenkins_username" {
-  value     = data.azurerm_key_vault_secret.jenkins-username.value
-  sensitive = true
-}
-
-output "jenkins_password" {
-  value     = data.azurerm_key_vault_secret.jenkins-password.value
-  sensitive = true
-}
