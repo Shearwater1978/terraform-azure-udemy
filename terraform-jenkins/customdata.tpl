@@ -16,6 +16,9 @@ sudo apt-get update
 sudo apt install openjdk-11-jre -y
 sudo apt install jenkins -y
 sudo curl -fsSL http://0.0.0.0:8080/jnlpJars/jenkins-cli.jar --output /var/lib/jenkins/jenkins-cli.jar
+export VERSION=$(wget -q -O - https://github.com/jenkinsci/plugin-installation-manager-tool/releases/latest | grep -E "<h1 data-view-component.*>.*</h1>" | grep -E -o "[0-9]{1,}.[0-9]{1,}.[0-9]{1,}")
+curl -fsSL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/$VERSION/jenkins-plugin-manager-$VERSION.jar --output /tmp/jenkins-plugin-manager.jar
+sudo cp /tmp/jenkins-plugin-manager.jar /var/lib/jenkins/
 sudo service jenkins stop
 sudo mkdir -p /var/lib/jenkins/plugins /var/lib/jenkins/init.groovy.d
 sudo curl -fsSL https://updates.jenkins-ci.org/latest/configuration-as-code.hpi --output /var/lib/jenkins/plugins/configuration-as-code.hpi

@@ -127,6 +127,22 @@ resource "azurerm_linux_virtual_machine" "self-vm" {
   }
 }
 
+resource "null_resource" "upload_jenkins_plugin_list" {
+  depends_on = [azurerm_linux_virtual_machine.self-vm]
+  provisioner "file" {
+    source      = "plugins.lst"
+    destination = "/tmp/plugins.lst"
+
+    connection {
+      type = "ssh"
+      host = azurerm_linux_virtual_machine.self-vm.public_ip_address
+      user = "adminuser"
+      private_key = "${file("~/.ssh/azure")}"
+      timeout  = "5m"
+    }
+  }
+}
+
 data "azurerm_key_vault" "jenkins" {
   name                = var.key_vault_name
   resource_group_name = var.key_vault_rg
@@ -148,7 +164,7 @@ data "azurerm_public_ip" "self-ip-data" {
 }
 
 data "template_file" "init" {
-  template = file("customdata.tpl.j2")
+  template = file("customdata.tpl")
   vars = {
     username = "${data.azurerm_key_vault_secret.jenkins-username.value}",
     password = "${data.azurerm_key_vault_secret.jenkins-password.value}"
@@ -156,5 +172,5 @@ data "template_file" "init" {
 }
 
 output "public_ip_address" {
-  value = "${azurerm_linux_virtual_machine.self-vm.name}: ${data.azurerm_public_ip.self-ip-data.ip_address}"
+  value = "${azurerm_linux_virtual_machine.self-vm.name}: ${azurerm_linux_virtual_machine.self-vm.public_ip_address}"
 }
