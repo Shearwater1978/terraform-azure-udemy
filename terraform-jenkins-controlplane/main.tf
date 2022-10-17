@@ -128,7 +128,7 @@ resource "azurerm_linux_virtual_machine" "self-vm" {
       user         = "adminuser",
       identityfile = "~/.ssh/azure"
     })
-    interpreter = var.host_os == "windows" ? ["Powershell", "-Command"] : ["bash", "-c"]
+    interpreter = ["bash", "-c"]
   }
 
   tags = {
