@@ -130,8 +130,8 @@ resource "azurerm_linux_virtual_machine" "self-vm" {
 resource "null_resource" "upload_jenkins_plugin_list" {
   depends_on = [azurerm_linux_virtual_machine.self-vm]
   provisioner "file" {
-    source      = "plugins.lst"
-    destination = "/tmp/plugins.lst"
+    source      = "plugins.txt"
+    destination = "/tmp/plugins.txt"
 
     connection {
       type = "ssh"
